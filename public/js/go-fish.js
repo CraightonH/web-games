@@ -1,8 +1,9 @@
 class GoFish extends CardGame {
   constructor() {
     super();
-    this.playerPairs = [];
-    this.computerPairs = [];
+    // Initialize pair collections with visual display
+    PairCollections.initialize(this, { showVisualPairs: true });
+
     this.waitingForDraw = false;
     this.askedRank = null;
     this.waitingForPlayerResponse = false;
@@ -22,41 +23,8 @@ class GoFish extends CardGame {
     this.animateInitialDeal();
   }
 
-
   checkAndRemovePairs(hand, player) {
-    const rankCounts = {};
-
-    for (let card of hand) {
-      rankCounts[card.rank] = (rankCounts[card.rank] || 0) + 1;
-    }
-
-    for (let rank in rankCounts) {
-      if (rankCounts[rank] >= 2) {
-        const pairs = Math.floor(rankCounts[rank] / 2);
-        const removedCards = [];
-
-        for (let i = 0; i < pairs * 2; i++) {
-          const index = hand.findIndex(card => card.rank === rank);
-          if (index !== -1) {
-            removedCards.push(hand.splice(index, 1)[0]);
-          }
-        }
-
-        for (let i = 0; i < pairs; i++) {
-          if (player === 'player') {
-            this.playerPairs.push({
-              rank: rank,
-              cards: [removedCards[i * 2], removedCards[i * 2 + 1]]
-            });
-          } else {
-            this.computerPairs.push({
-              rank: rank,
-              cards: [removedCards[i * 2], removedCards[i * 2 + 1]]
-            });
-          }
-        }
-      }
-    }
+    PairCollections.checkAndRemovePairs(hand, player, this);
   }
 
   // Inherited from CardGame: drawCardFromDeck(), addCardToHand(), drawCard()
@@ -156,32 +124,7 @@ class GoFish extends CardGame {
   }
 
   animatePairCollection(pairCards, player, callback) {
-    // Remove from hand
-    pairCards.forEach(card => {
-      const hand = player === 'player' ? this.playerHand : this.computerHand;
-      const index = hand.indexOf(card);
-      if (index !== -1) {
-        hand.splice(index, 1);
-      }
-    });
-
-    // Add to pairs collection
-    if (player === 'player') {
-      this.playerPairs.push({
-        rank: pairCards[0].rank,
-        cards: pairCards
-      });
-    } else {
-      this.computerPairs.push({
-        rank: pairCards[0].rank,
-        cards: pairCards
-      });
-    }
-
-    this.updateDisplay();
-
-    // Use CardAnimations utility for the visual animation
-    CardAnimations.animatePairCollection(pairCards, player, callback);
+    PairCollections.animateCollectPair(pairCards, player, this, callback);
   }
 
   askForCard(askingPlayer, rank) {
@@ -414,8 +357,8 @@ class GoFish extends CardGame {
       computerHandArea.classList.remove('active-turn');
     }
 
-    this.displayPairs('player-pairs', this.playerPairs);
-    this.displayPairs('computer-pairs', this.computerPairs);
+    PairCollections.displayPairs('player-pairs', this.playerPairs, this);
+    PairCollections.displayPairs('computer-pairs', this.computerPairs, this);
 
     // Auto-draw if player has no cards on their turn (but not during initial deal)
     if (this.currentTurn === 'player' && this.playerHand.length === 0 && !this.gameOver && !this.waitingForDraw && !this.waitingForPlayerResponse && !this.isInitialDeal) {
@@ -437,26 +380,7 @@ class GoFish extends CardGame {
     }
   }
 
-  displayPairs(elementId, pairsArray) {
-    const pairsEl = document.getElementById(elementId);
-    pairsEl.innerHTML = '';
-
-    pairsArray.forEach(pair => {
-      const pairGroup = document.createElement('div');
-      pairGroup.className = 'pair-group';
-
-      pair.cards.forEach(card => {
-        const cardEl = this.createCardElement(card, true);
-        cardEl.style.width = '60px';
-        cardEl.style.height = '90px';
-        cardEl.style.fontSize = '0.9em';
-        cardEl.style.cursor = 'default';
-        pairGroup.appendChild(cardEl);
-      });
-
-      pairsEl.appendChild(pairGroup);
-    });
-  }
+  // Using PairCollections.displayPairs() from utility
 
   createCardElement(card, showFace) {
     const cardEl = document.createElement('div');

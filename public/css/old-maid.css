@@ -1,0 +1,14 @@
+/**
+ * Old Maid specific styles
+ */
+
+.old-maid-card {
+  background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
+  border-color: #ff5722;
+  border-width: 3px;
+}
+
+.old-maid-card:hover {
+  transform: translateY(-10px) rotate(5deg);
+  box-shadow: 0 10px 20px rgba(255, 87, 34, 0.5);
+}

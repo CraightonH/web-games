@@ -102,6 +102,99 @@ CardAnimations.animatePairCollection(pairCards, 'player', () => {
 });
 ```
 
+## PairCollections.js
+
+Optional utility for games that collect pairs/sets. Provides visual display and management of collected pairs.
+
+### Initialization
+
+```javascript
+// In your game constructor
+class MyCardGame extends CardGame {
+  constructor() {
+    super();
+    // Initialize with visual pair display
+    PairCollections.initialize(this, { showVisualPairs: true });
+    // this.playerPairs and this.computerPairs are now arrays
+  }
+}
+
+// Or without visual display (count only)
+PairCollections.initialize(this, { showVisualPairs: false });
+```
+
+### Methods
+
+#### `checkAndRemovePairs(hand, player, game)`
+
+Checks for and removes pairs from a hand.
+
+```javascript
+PairCollections.checkAndRemovePairs(this.playerHand, 'player', this);
+```
+
+#### `displayPairs(elementId, pairsArray, game)`
+
+Displays collected pairs visually (if enabled).
+
+```javascript
+PairCollections.displayPairs('player-pairs', this.playerPairs, this);
+```
+
+#### `animateCollectPair(pairCards, player, game, callback)`
+
+Animates collecting a pair with removal from hand.
+
+```javascript
+PairCollections.animateCollectPair(pairCards, 'player', this, () => {
+  console.log('Pair collected!');
+});
+```
+
+#### `getPairCount(player, game)`
+
+Get the total number of pairs collected.
+
+```javascript
+const count = PairCollections.getPairCount('player', this);
+```
+
+### Example Usage
+
+**Go Fish** (with visual pairs):
+```javascript
+class GoFish extends CardGame {
+  constructor() {
+    super();
+    PairCollections.initialize(this, { showVisualPairs: true });
+    // ...
+  }
+
+  checkAndRemovePairs(hand, player) {
+    PairCollections.checkAndRemovePairs(hand, player, this);
+  }
+
+  updateDisplay() {
+    // ...
+    PairCollections.displayPairs('player-pairs', this.playerPairs, this);
+    PairCollections.displayPairs('computer-pairs', this.computerPairs, this);
+  }
+}
+```
+
+**Old Maid** (count only):
+```javascript
+class OldMaid extends CardGame {
+  constructor() {
+    super();
+    // Old Maid just counts pairs, doesn't display them visually
+    this.playerPairs = 0;
+    this.computerPairs = 0;
+    // Don't use PairCollections utility
+  }
+}
+```
+
 ## CSS Files
 
 ### card-game-common.css
@@ -119,24 +212,51 @@ Common styles for all card games:
 
 Each game should have its own CSS file for game-specific styles (e.g., `go-fish.css`).
 
-## HTML Structure
+## Standard Game Layout
 
-To use these utilities, include them in your game's HTML:
+All card games should follow this consistent HTML structure:
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Card Game</title>
+    <title>My Card Game - Kids Card Games</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/card-game-common.css">
-    <link rel="stylesheet" href="/css/my-game.css">
+    <link rel="stylesheet" href="/css/my-game.css"> <!-- Game-specific styles -->
 </head>
 <body>
-    <!-- Game UI -->
+    <div class="container">
+        <div class="game-container">
+            <!-- STANDARD HEADER (all games must have this) -->
+            <div class="header-controls">
+                <a href="/" class="back-button">← Back to Games</a>
+                <button id="new-game-btn" class="btn">New Game</button>
+            </div>
+            <h1>🎮 My Card Game 🎮</h1>
 
+            <!-- GAME INFO SECTION (optional, game-specific) -->
+            <div class="score">
+                <!-- Score display, status info, etc. -->
+            </div>
+
+            <!-- GAME OVER PROMPT (recommended for consistency) -->
+            <div id="game-over-prompt" class="game-over-prompt" style="display: none;">
+                <div id="game-over-text" class="game-over-text"></div>
+                <div id="game-over-score" class="game-over-score"></div>
+            </div>
+
+            <!-- GAME BOARD (game-specific layout) -->
+            <div class="game-board">
+                <!-- Your game's UI here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS (in this order) -->
     <script src="/js/utils/CardGame.js"></script>
     <script src="/js/utils/CardAnimations.js"></script>
+    <script src="/js/utils/PairCollections.js"></script> <!-- If using pair collections -->
     <script src="/js/my-game.js"></script>
 </body>
 </html>
@@ -144,14 +264,20 @@ To use these utilities, include them in your game's HTML:
 
 ## Required HTML Elements
 
-For animations to work, your HTML must include:
+For basic card game functionality:
 
-- `.deck-card` - The draw pile element
 - `#player-hand` - Container for player's cards
 - `#computer-hand` - Container for computer's cards
 - `#deck-count` - Element showing number of cards in deck (optional)
-- `#player-pairs` - Container for player's collected pairs (if applicable)
-- `#computer-pairs` - Container for computer's collected pairs (if applicable)
+
+For animations:
+
+- `.deck-card` - The draw pile element (required for CardAnimations)
+
+For pair collections (if using PairCollections utility):
+
+- `#player-pairs` - Container for player's collected pairs
+- `#computer-pairs` - Container for computer's collected pairs
 
 ## Example: Go Fish
 

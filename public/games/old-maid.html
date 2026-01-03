@@ -5,37 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Old Maid - Kids Card Games</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/card-game-common.css">
+    <link rel="stylesheet" href="/css/old-maid.css">
 </head>
 <body>
     <div class="container">
         <div class="game-container">
-            <a href="/" class="back-button">← Back to Games</a>
+            <div class="header-controls">
+                <a href="/" class="back-button">← Back to Games</a>
+                <button id="new-game-btn" class="btn">New Game</button>
+            </div>
             <h1>👵 Old Maid 👵</h1>
 
-            <div class="score">
-                <h3>Pairs Collected:</h3>
-                <p>You: <span id="player-score">0</span> | Computer: <span id="computer-score">0</span></p>
+            <div id="game-over-prompt" class="game-over-prompt" style="display: none;">
+                <div id="game-over-text" class="game-over-text"></div>
+                <div id="game-over-score" class="game-over-score"></div>
             </div>
 
-            <div id="message" class="message"></div>
-
             <div class="game-board">
-                <div class="hand">
+                <div class="hand" id="computer-hand-area">
                     <h3>Computer's Hand (<span id="computer-hand-count">0</span> cards) - Click to draw</h3>
                     <div id="computer-hand" class="cards"></div>
                 </div>
 
-                <div class="controls">
-                    <button id="new-game-btn" class="btn">New Game</button>
+                <div class="collections-area">
+                    <h3>Computer's Pairs</h3>
+                    <div id="computer-pairs" class="pairs-display"></div>
                 </div>
 
-                <div class="hand">
+                <div class="collections-area">
+                    <h3>Your Pairs</h3>
+                    <div id="player-pairs" class="pairs-display"></div>
+                </div>
+
+                <div class="hand" id="player-hand-area">
                     <h3>Your Hand</h3>
                     <div id="player-hand" class="cards"></div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="/js/utils/CardGame.js"></script>
+    <script src="/js/utils/CardAnimations.js"></script>
+    <script src="/js/utils/PairCollections.js"></script>
     <script src="/js/old-maid.js"></script>
 </body>
 </html>

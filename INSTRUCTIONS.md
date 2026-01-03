@@ -12,6 +12,7 @@
 ## Code Quality
 
 - Include comprehensive documentation and comments
+- Always consider whether a certain feature or functionality can be abstracted into its own module for future use in another context. Favor abstraction where possible.
 
 ## Version Control
 

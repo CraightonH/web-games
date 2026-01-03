@@ -199,9 +199,29 @@
 
 .pairs-display {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 15px;
   min-height: 60px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.pairs-display::-webkit-scrollbar {
+  height: 8px;
+}
+
+.pairs-display::-webkit-scrollbar-track {
+  background: #fff59d;
+  border-radius: 4px;
+}
+
+.pairs-display::-webkit-scrollbar-thumb {
+  background: #fbc02d;
+  border-radius: 4px;
+}
+
+.pairs-display::-webkit-scrollbar-thumb:hover {
+  background: #f9a825;
 }
 
 .pair-group {
@@ -212,6 +232,7 @@
   border-radius: 8px;
   border: 2px solid #fbc02d;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .pair-label {

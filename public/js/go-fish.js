@@ -1,12 +1,8 @@
-class GoFish {
+class GoFish extends CardGame {
   constructor() {
-    this.deck = [];
-    this.playerHand = [];
-    this.computerHand = [];
+    super();
     this.playerPairs = [];
     this.computerPairs = [];
-    this.currentTurn = 'player';
-    this.gameOver = false;
     this.waitingForDraw = false;
     this.askedRank = null;
     this.waitingForPlayerResponse = false;
@@ -22,27 +18,8 @@ class GoFish {
     this.shuffleDeck();
     // Don't call updateDisplay here - it triggers auto-draw
     // Just update the deck count
-    document.getElementById('deck-count').textContent = this.deck.length;
+    this.updateDeckCount();
     this.animateInitialDeal();
-  }
-
-  createDeck() {
-    const suits = ['♥', '♦', '♣', '♠'];
-    const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
-    this.deck = [];
-    for (let suit of suits) {
-      for (let rank of ranks) {
-        this.deck.push({ rank, suit, color: (suit === '♥' || suit === '♦') ? 'red' : 'black' });
-      }
-    }
-  }
-
-  shuffleDeck() {
-    for (let i = this.deck.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
-    }
   }
 
 
@@ -82,155 +59,14 @@ class GoFish {
     }
   }
 
-  drawCardFromDeck() {
-    if (this.deck.length === 0) {
-      return null;
-    }
-    return this.deck.pop();
-  }
-
-  addCardToHand(card, player) {
-    if (player === 'player') {
-      this.playerHand.push(card);
-    } else {
-      this.computerHand.push(card);
-    }
-  }
-
-  drawCard(player) {
-    const card = this.drawCardFromDeck();
-    if (card) {
-      this.addCardToHand(card, player);
-    }
-    return card;
-  }
+  // Inherited from CardGame: drawCardFromDeck(), addCardToHand(), drawCard()
 
   animateCardDraw(card, targetPlayer, callback, fast = false) {
-    const deckCard = document.querySelector('.deck-card');
-    const deckRect = deckCard.getBoundingClientRect();
-
-    const animatedCard = document.createElement('div');
-    animatedCard.className = 'card card-back animated-card';
-    animatedCard.textContent = '🎴';
-    animatedCard.style.left = `${deckRect.left}px`;
-    animatedCard.style.top = `${deckRect.top}px`;
-    if (fast) {
-      animatedCard.style.transition = 'all 0.4s ease-in-out';
-    }
-    document.body.appendChild(animatedCard);
-
-    let targetElement;
-    if (targetPlayer === 'player') {
-      targetElement = document.getElementById('player-hand');
-    } else {
-      targetElement = document.getElementById('computer-hand');
-    }
-
-    const moveDelay = fast ? 25 : 50;
-    const flipStartDelay = fast ? 200 : 400;
-    const flipMidDelay = fast ? 150 : 300;
-    const totalDuration = fast ? 600 : 1200;
-
-    setTimeout(() => {
-      const targetRect = targetElement.getBoundingClientRect();
-      animatedCard.style.left = `${targetRect.left + targetRect.width / 2 - 40}px`;
-      animatedCard.style.top = `${targetRect.top + targetRect.height / 2 - 60}px`;
-
-      if (targetPlayer === 'player' && card) {
-        setTimeout(() => {
-          animatedCard.classList.add('flipping');
-          setTimeout(() => {
-            animatedCard.classList.remove('card-back');
-            animatedCard.classList.add(card.color);
-            animatedCard.textContent = '';
-
-            const rankEl = document.createElement('div');
-            rankEl.className = 'card-rank';
-            rankEl.textContent = card.rank;
-            const suitEl = document.createElement('div');
-            suitEl.className = 'card-suit';
-            suitEl.textContent = card.suit;
-            animatedCard.appendChild(rankEl);
-            animatedCard.appendChild(suitEl);
-          }, flipMidDelay);
-        }, flipStartDelay);
-      }
-    }, moveDelay);
-
-    setTimeout(() => {
-      animatedCard.remove();
-      if (callback) callback();
-    }, totalDuration);
+    CardAnimations.animateCardDraw(card, targetPlayer, callback, fast);
   }
 
   animateCardTransfer(cards, fromPlayer, toPlayer, callback) {
-    const fromElement = fromPlayer === 'player' ? document.getElementById('player-hand') : document.getElementById('computer-hand');
-    const toElement = toPlayer === 'player' ? document.getElementById('player-hand') : document.getElementById('computer-hand');
-
-    const fromRect = fromElement.getBoundingClientRect();
-    const toRect = toElement.getBoundingClientRect();
-
-    let animationsComplete = 0;
-    const totalAnimations = cards.length;
-
-    cards.forEach((card, index) => {
-      setTimeout(() => {
-        const animatedCard = document.createElement('div');
-        animatedCard.className = 'card animated-card';
-
-        if (fromPlayer === 'player') {
-          animatedCard.classList.add(card.color);
-          const rankEl = document.createElement('div');
-          rankEl.className = 'card-rank';
-          rankEl.textContent = card.rank;
-          const suitEl = document.createElement('div');
-          suitEl.className = 'card-suit';
-          suitEl.textContent = card.suit;
-          animatedCard.appendChild(rankEl);
-          animatedCard.appendChild(suitEl);
-        } else {
-          animatedCard.classList.add('card-back');
-          animatedCard.textContent = '🎴';
-        }
-
-        animatedCard.style.left = `${fromRect.left + fromRect.width / 2 - 40}px`;
-        animatedCard.style.top = `${fromRect.top + fromRect.height / 2 - 60}px`;
-        document.body.appendChild(animatedCard);
-
-        setTimeout(() => {
-          animatedCard.style.left = `${toRect.left + toRect.width / 2 - 40}px`;
-          animatedCard.style.top = `${toRect.top + toRect.height / 2 - 60}px`;
-
-          if (toPlayer === 'player' && fromPlayer === 'computer') {
-            setTimeout(() => {
-              animatedCard.classList.add('flipping');
-              setTimeout(() => {
-                animatedCard.classList.remove('card-back');
-                animatedCard.classList.add(card.color);
-                animatedCard.textContent = '';
-
-                const rankEl = document.createElement('div');
-                rankEl.className = 'card-rank';
-                rankEl.textContent = card.rank;
-                const suitEl = document.createElement('div');
-                suitEl.className = 'card-suit';
-                suitEl.textContent = card.suit;
-                animatedCard.appendChild(rankEl);
-                animatedCard.appendChild(suitEl);
-              }, 300);
-            }, 400);
-          }
-        }, 50);
-
-        setTimeout(() => {
-          animatedCard.remove();
-          animationsComplete++;
-          if (animationsComplete === totalAnimations && callback) {
-            callback();
-          }
-        }, 1200);
-      }, index * 150);
-    });
+    CardAnimations.animateCardTransfer(cards, fromPlayer, toPlayer, callback);
   }
 
   animateInitialDeal() {
@@ -344,9 +180,8 @@ class GoFish {
 
     this.updateDisplay();
 
-    if (callback) {
-      setTimeout(callback, 600);
-    }
+    // Use CardAnimations utility for the visual animation
+    CardAnimations.animatePairCollection(pairCards, player, callback);
   }
 
   askForCard(askingPlayer, rank) {
@@ -692,7 +527,7 @@ class GoFish {
     prompt.style.display = 'none';
   }
 
-  showMessage(text, type = "info") {
+  showMessage() {
     // Messages removed - using visual turn indicators instead
   }
 

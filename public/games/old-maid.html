@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Maid - Kids Card Games</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-container">
+            <a href="/" class="back-button">← Back to Games</a>
+            <h1>👵 Old Maid 👵</h1>
+
+            <div class="score">
+                <h3>Pairs Collected:</h3>
+                <p>You: <span id="player-score">0</span> | Computer: <span id="computer-score">0</span></p>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="game-board">
+                <div class="hand">
+                    <h3>Computer's Hand (<span id="computer-hand-count">0</span> cards) - Click to draw</h3>
+                    <div id="computer-hand" class="cards"></div>
+                </div>
+
+                <div class="controls">
+                    <button id="new-game-btn" class="btn">New Game</button>
+                </div>
+
+                <div class="hand">
+                    <h3>Your Hand</h3>
+                    <div id="player-hand" class="cards"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/old-maid.js"></script>
+</body>
+</html>

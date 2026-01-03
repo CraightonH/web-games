@@ -4,7 +4,8 @@
       "Bash(tree:*)",
       "Bash(npm:*)",
       "Bash(docker:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(mkdir:*)"
     ]
   }
 }

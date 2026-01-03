@@ -4,10 +4,12 @@
 
 - Implement common kids card/board games on a web page
 - Recognize that your audience is younger than 10. Favor UI indicators over text to convey information to the player. Animate actions that would occur if playing the real game, ie. pieces moving on the board, draw cards off the deck, etc. This list is not comprehensive.
+- Don't reinvent the wheel. Use modules/utilities where possible. 
+- Proactively refactor code into utilities when you need to implement the same functionality elsewhere.
 
 ## Technical Specifications
 
-- The website should work well on a tablet or larger screen
+- The website should look good on a tablet or larger screen
 
 ## Code Quality
 
@@ -22,3 +24,10 @@
 
 - Go Fish
 - Old Maid
+- Crazy Eights
+
+## Responses
+
+- Summarize changes with bullet points
+- Don't discuss every action you're taking unless you need further direction
+- 

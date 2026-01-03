@@ -15,15 +15,23 @@
             </div>
             <h1>🐟 Go Fish 🐟</h1>
 
-            <div class="score">
-                <h3>Pairs Collected:</h3>
-                <p>You: <span id="player-score">0</span> | Computer: <span id="computer-score">0</span></p>
+            <div id="go-fish-prompt" class="go-fish-prompt" style="display: none;">
+                <div class="go-fish-text">Go, Fish!</div>
             </div>
 
-            <div id="message" class="message"></div>
+            <div id="computer-request-prompt" class="computer-request-prompt" style="display: none;">
+                <div class="request-text">Do you have any</div>
+                <div id="requested-card-display" class="requested-card-display"></div>
+                <button id="go-fish-btn" class="btn go-fish-response-btn">Go, Fish!</button>
+            </div>
+
+            <div id="game-over-prompt" class="game-over-prompt" style="display: none;">
+                <div id="game-over-text" class="game-over-text"></div>
+                <div id="game-over-score" class="game-over-score"></div>
+            </div>
 
             <div class="game-board">
-                <div class="hand">
+                <div class="hand" id="computer-hand-area">
                     <h3>Computer's Hand (<span id="computer-hand-count">0</span> cards)</h3>
                     <div id="computer-hand" class="cards"></div>
                 </div>
@@ -45,7 +53,7 @@
                     <div id="player-pairs" class="pairs-display"></div>
                 </div>
 
-                <div class="hand">
+                <div class="hand" id="player-hand-area">
                     <h3>Your Hand (Click a card to ask for it)</h3>
                     <div id="player-hand" class="cards"></div>
                 </div>

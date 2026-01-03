@@ -2,12 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(tree:*)",
-      "Bash(docker build:*)",
-      "Bash(npm install)",
-      "Bash(docker run:*)",
-      "Bash(docker logs:*)",
-      "Bash(docker rm:*)",
-      "Bash(docker ps:*)",
+      "Bash(npm:*)",
+      "Bash(docker:*)",
       "Bash(curl:*)"
     ]
   }

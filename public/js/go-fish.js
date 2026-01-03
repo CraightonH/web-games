@@ -405,23 +405,15 @@ class GoFish {
       }
       this.updateDisplay();
 
-      if (drawnCard) {
-        if (drawnCard.rank === this.askedRank) {
-          this.showMessage(`Lucky! You drew the ${this.askedRank} you asked for! Go again!`, "info");
-        } else {
-          this.showMessage(`You drew a ${drawnCard.rank}${drawnCard.suit}. Computer's turn!`, "info");
-          this.currentTurn = 'computer';
-          setTimeout(() => this.computerTurn(), 1500);
-        }
-      } else {
-        this.currentTurn = 'computer';
-        setTimeout(() => this.computerTurn(), 1500);
-      }
+      // Drawing a card always ends your turn, even if you get the card you asked for
+      this.currentTurn = 'computer';
 
       this.checkAndRemovePairs(this.playerHand, 'player');
       this.updateDisplay();
 
-      if (this.checkGameOver()) return;
+      if (!this.checkGameOver()) {
+        setTimeout(() => this.computerTurn(), 1500);
+      }
     });
   }
 
@@ -731,6 +723,12 @@ class GoFish {
 
     document.getElementById('go-fish-btn').addEventListener('click', () => {
       if (this.waitingForPlayerResponse) {
+        // Check if player actually has the requested card
+        const hasCard = this.playerHand.some(card => card.rank === this.computerAskedRank);
+        if (hasCard) {
+          // Player is trying to lie - don't allow it
+          return;
+        }
         this.playerRespondsToComputer(false);
       }
     });
